@@ -16,7 +16,7 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
+<body class="font-sans antialiased bg-gray-100 min-h-screen">
 @php
     $menu = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard.index', 'active' => request()->routeIs('admin.dashboard.*')],
@@ -27,14 +27,14 @@
     ];
 @endphp
 
-<div class="min-h-[100%]">
+<div class="min-h-screen">
     {{-- overlay mobile --}}
     <div id="adminOverlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"></div>
 
-    <div class="flex">
+    <div class="flex min-h-screen ">
         {{-- SIDEBAR --}}
         <aside id="adminSidebar"
-               class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full bg-slate-800 text-slate-100 transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto">
+            class="fixed inset-y-0 left-0 z-40 w-64 min-w-64 max-w-64 min-h-screen -translate-x-full bg-slate-800 text-slate-100 transition-transform duration-200 lg:translate-x-0  lg:transform-none lg:inset-auto lg:overflow-visible lg:h-auto h-screen overflow-hidden flex flex-col ">
             <div class="flex items-center gap-3 px-5 py-5 border-b border-white/10">
                 <div class="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center">
                     <span class="text-lg font-bold">D</span>
@@ -62,7 +62,7 @@
         </aside>
 
         {{-- MAIN --}}
-        <div class="flex-1 lg:ml-64">
+        <div class="flex-1 min-h-screen min-w-0 lg:ml-64 overflow-x-scroll">
             {{-- TOPBAR --}}
             <header class="sticky top-0 z-20 border-b bg-white/90 backdrop-blur">
                 <div class="flex items-center justify-between px-4 py-3 lg:px-6">
@@ -78,9 +78,8 @@
 
                     <div class="flex items-center gap-3">
                         {{-- notif pesanan masuk (sudah ada di project Anda) --}}
-                        <livewire:admin.notifikasi-pesanan-masuk
-                        :enablePoll= 
-                        "!request()->routeIs('admin.pesanan.*')"/>
+                        <livewire:admin.notifikasi-pesanan-masuk :enablePoll="!request()->routeIs('admin.pesanan.*')" />
+
                         {{-- profile dropdown --}}
                         <div class="relative">
                             <button id="profileBtn" type="button"
@@ -117,7 +116,7 @@
                 </div>
             </header>
 
-            <main class="px-4 py-6 lg:px-6">
+            <main class="m-0 px-4 py-6 lg:px-6">
                 {{-- HEADER SLOT (kompatibel seperti x-app-layout) --}}
                 @if (isset($header))
                     <div class="mb-6">
