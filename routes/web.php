@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardAdminController;
+use App\Livewire\Admin\AdminCrud;
 
 Route::view('/', 'welcome');
 
@@ -40,7 +41,7 @@ Route::middleware([PastikanMejaTerpilih::class])->group(function () {
     Route::get('/struk/{kode}/pdf', [StrukController::class, 'pdf'])->name('pelanggan.struk.pdf');
 });
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'user.active', 'admin.only'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardAdminController::class, 'index'])
     ->name('admin.dashboard.index');
     Route::get('/meja', [MejaAdminController::class, 'index'])
@@ -57,6 +58,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ->name('admin.stok.rendah');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/admins', AdminCrud::class)
+        ->middleware('superadmin.only')
+        ->name('admin.admins.index');
 
 });
 

@@ -26,20 +26,28 @@ class LoginForm extends Form
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+   public function authenticate(): void
+{
+    $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'form.email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+    if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+        RateLimiter::hit($this->throttleKey());
+        throw ValidationException::withMessages(['form.email' => trans('auth.failed')]);
     }
+
+    // cek aktif / nonaktif
+    $user = Auth::user();
+    if (! $user->is_active) {
+        Auth::logout();
+        RateLimiter::hit($this->throttleKey());
+        throw ValidationException::withMessages([
+            'form.email' => 'Akun admin sedang dinonaktifkan.',
+        ]);
+    }
+    $user->forceFill(['last_login_at' => now()])->save();
+
+    RateLimiter::clear($this->throttleKey());
+}
 
     /**
      * Ensure the authentication request is not rate limited.

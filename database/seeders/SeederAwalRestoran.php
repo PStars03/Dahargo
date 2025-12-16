@@ -23,6 +23,8 @@ class SeederAwalRestoran extends Seeder
             [
                 'name' => 'Admin Resto',
                 'password' => Hash::make('password'),
+                'role' => 'superadmin',
+                'is_active' => true,
             ]
         );
 

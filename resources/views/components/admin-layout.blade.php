@@ -27,6 +27,10 @@
         ['label' => 'Stok Rendah', 'route' => 'admin.stok.rendah', 'active' => request()->routeIs('admin.stok.*')],
         ['label' => 'Menu', 'route' => 'admin.menu.index', 'active' => request()->routeIs('admin.menu.*')],
     ];
+
+    if (auth()->check() && auth()->user()->role === 'superadmin') {
+        $menu[] = ['label' => 'Kelola Admin', 'route' => 'admin.admins.index', 'active' => request()->routeIs('admin.admins.*')];
+    }
 @endphp
 
 <div class="min-h-screen">
