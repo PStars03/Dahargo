@@ -16,6 +16,11 @@ class StokRendah extends Component
             ->sortBy(fn($m) => max(0, (int)$m->stok_fisik - (int)$m->stok_dipesan))
             ->values();
 
+        $this->dispatch('notyf', [
+            'type' => 'error',
+            'message' => 'Stok tidak mencukupi'
+        ]);
+
         return view('livewire.admin.stok-rendah', compact('menu'));
     }
 }

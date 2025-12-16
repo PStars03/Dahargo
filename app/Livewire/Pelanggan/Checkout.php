@@ -62,13 +62,13 @@ class Checkout extends Component
         $tokenTamu = request()->cookie('token_tamu') ?: (string) Str::uuid();
 
         if (!$mejaId) {
-            $this->dispatch('toast', tipe: 'error', pesan: 'Meja belum dipilih. Scan QR dulu.');
+            $this->dispatch('notyf', tipe: 'error', pesan: 'Meja belum dipilih. Scan QR dulu.');
             return;
         }
 
         $keranjang = $this->keranjang;
         if (empty($keranjang)) {
-            $this->dispatch('toast', tipe: 'peringatan', pesan: 'Keranjang kosong.');
+            $this->dispatch('notyf', tipe: 'peringatan', pesan: 'Keranjang kosong.');
             return;
         }
 
@@ -163,13 +163,18 @@ class Checkout extends Component
 
             session()->forget('keranjang');
 
+            session()->flash('notyf', [
+                'type' => 'success',
+                'message' => 'Pesanan berhasil dibuat!',
+            ]);
+
             return redirect()->route('pelanggan.pesanan.status', ['kode' => $pesanan->kode]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Throwable $e) {
             report($e);
-            $this->dispatch('toast', tipe: 'error', pesan: 'Gagal membuat pesanan. Coba lagi.');
+            $this->dispatch('notyf', tipe: 'error', pesan: 'Gagal membuat pesanan. Coba lagi.');
         }
     }
 

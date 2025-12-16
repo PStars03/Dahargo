@@ -52,7 +52,7 @@ class DaftarMenu extends Component
         $stokTersedia = max(0, (int)$menu->stok_fisik - (int)$menu->stok_dipesan);
 
         if ($stokTersedia <= 0) {
-            $this->dispatch('toast', tipe: 'error', pesan: 'Stok habis.');
+            $this->dispatch('notyf', tipe: 'error', pesan: 'Stok habis.');
             return;
         }
 
@@ -60,14 +60,14 @@ class DaftarMenu extends Component
         $jumlahSaatIni = (int)($keranjang[$menuId] ?? 0);
 
         if (($jumlahSaatIni + 1) > $stokTersedia) {
-            $this->dispatch('toast', tipe: 'peringatan', pesan: 'Jumlah melebihi stok tersedia.');
+            $this->dispatch('notyf', tipe: 'danger', pesan: 'Jumlah melebihi stok tersedia.');
             return;
         }
 
         $keranjang[$menuId] = $jumlahSaatIni + 1;
         $this->simpanKeranjang($keranjang);
 
-        $this->dispatch('toast', tipe: 'sukses', pesan: 'Ditambahkan ke keranjang.');
+        $this->dispatch('notyf', tipe: 'success', pesan: 'Ditambahkan ke keranjang.');
 
 
     }

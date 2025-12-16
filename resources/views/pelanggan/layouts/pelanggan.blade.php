@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $judul ?? config('app.name', 'Pemesanan Resto') }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -98,5 +99,37 @@
     </div>
 
     @livewireScripts
+
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
+    <script>
+        window.notyf = new Notyf({
+            duration: 3000,
+            position: {
+                x: 'right',
+                y: 'top',
+            },
+            dismissible: true,
+            ripple: true,
+        });
+
+        // listener dari Livewire
+        window.addEventListener('notyf', (event) => {
+            const { type, message } = event.detail;
+
+            if (type === 'success') notyf.success(message);
+            if (type === 'error') notyf.error(message);
+            if (type === 'info') notyf.open({ type: 'info', message });
+            if (type === 'warning') notyf.open({ type: 'warning', message });
+        });
+    </script>
+@if (session()->has('notyf'))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const d = @json(session('notyf'));
+        document.dispatchEvent(new CustomEvent('notyf', { detail: d }));
+        });
+    </script>
+@endif
 </body>
 </html>
