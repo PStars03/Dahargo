@@ -52,44 +52,66 @@
     {{-- Grid menu --}}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         @forelse($menu as $m)
-            <div class="rounded-xl border bg-white p-4 shadow-sm">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="text-base font-semibold text-gray-900">{{ $m->nama }}</p>
-                        @if($m->deskripsi)
-                            <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ $m->deskripsi }}</p>
-                        @endif
-                    </div>
+            <div class="rounded-xl border bg-white shadow-sm overflow-hidden flex flex-col">
 
+                {{-- FOTO MENU --}}
+                <div class="h-full w-full object-cover transition-transform duration-300 hover:scale-105">
+                    <img
+                        src="{{ $m->path_foto
+                            ? asset('storage/'.$m->path_foto)
+                            : 'https://via.placeholder.com/400x300?text=Menu' }}"
+                        alt="{{ $m->nama }}"
+                        class="h-full w-full object-cover"
+                    >
+                </div>
+
+                {{-- ISI CARD --}}
+                <div class="flex flex-col gap-2 p-4 flex-1">
+
+                    {{-- NAMA MENU --}}
+                    <p class="text-base font-semibold text-gray-900">
+                        {{ $m->nama }}
+                    </p>
+
+                    {{-- DESKRIPSI --}}
+                    @if($m->deskripsi)
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            {{ $m->deskripsi }}
+                        </p>
+                    @endif
+
+                    {{-- STOK --}}
                     @if($m->stok_tersedia <= 0)
-                        <span class="shrink-0 rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700">
+                        <span class="mt-1 w-fit rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">
                             Stok habis
                         </span>
                     @else
-                        <span class="shrink-0 rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
+                        <span class="mt-1 w-fit rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
                             Tersedia: {{ $m->stok_tersedia }}
                         </span>
                     @endif
-                </div>
 
-                <div class="mt-4 flex items-center justify-between">
-                    <p class="text-sm font-semibold text-gray-900">
-                        Rp {{ number_format($m->harga, 0, ',', '.') }}
-                    </p>
+                    {{-- FOOTER --}}
+                    <div class="mt-auto flex items-center justify-between pt-3">
+                        <p class="text-sm font-semibold text-gray-900">
+                            Rp {{ number_format($m->harga, 0, ',', '.') }}
+                        </p>
 
-                    <button
-                        wire:click="tambahKeKeranjang({{ $m->id }})"
-                        @disabled($m->stok_tersedia <= 0)
-                        class="inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium"
-                        @class([
-                            'bg-gray-900 text-white hover:bg-gray-800' => $m->stok_tersedia > 0,
-                            'bg-gray-200 text-gray-500 cursor-not-allowed' => $m->stok_tersedia <= 0,
-                        ])
-                    >
-                        Tambah
-                    </button>
+                        <button
+                            wire:click="tambahKeKeranjang({{ $m->id }})"
+                            @disabled($m->stok_tersedia <= 0)
+                            class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium"
+                            @class([
+                                'bg-gray-900 text-white hover:bg-gray-800' => $m->stok_tersedia > 0,
+                                'bg-gray-200 text-gray-500 cursor-not-allowed' => $m->stok_tersedia <= 0,
+                            ])
+                        >
+                            Tambah
+                        </button>
+                    </div>
                 </div>
             </div>
+
         @empty
             <div class="col-span-full rounded-xl border bg-white p-6 text-sm text-gray-600">
                 Menu tidak ditemukan.

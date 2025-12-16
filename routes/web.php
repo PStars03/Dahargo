@@ -13,6 +13,7 @@ use App\Livewire\Pelanggan\RiwayatPesanan;
 use App\Livewire\Admin\DetailPesanan;
 use App\Livewire\Admin\StokRendah;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 
 Route::view('/', 'welcome');
@@ -51,6 +52,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ->name('admin.pesanan.detail');
     Route::get('/stok-rendah', StokRendah::class)
         ->name('admin.stok.rendah');
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 });
 

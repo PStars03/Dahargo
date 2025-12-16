@@ -5,7 +5,6 @@
             <livewire:admin.notifikasi-pesanan-masuk />
         </div>
         <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-gray-800">Antrian Pesanan</h2>
             <span class="text-xs text-gray-500">Auto refresh</span>
         </div>
     </x-slot>
