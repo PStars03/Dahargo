@@ -136,8 +136,8 @@
 
                     <div class="md:col-span-2">
                         <label class="text-sm font-medium text-gray-700">Foto</label>
-                        <input wire:model="path_foto" type="file" class="mt-1 w-full text-sm">
-                        @error('path_foto') <div class="text-xs text-red-600 mt-1">{{ $message }}</div> @enderror
+                        <input wire:model="foto" type="file" accept="image/*" class="mt-1 w-full text-sm">
+                        @error('foto') <div class="text-xs text-red-600 mt-1">{{ $message }}</div> @enderror
                     </div>
 
                     <label class="md:col-span-2 inline-flex items-center gap-2 text-sm">
