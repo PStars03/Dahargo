@@ -69,16 +69,14 @@ class MenuCrud extends Component
 
     public function simpan()
     {
-        $this->validate([
+         $data = $this->validate([
             'kategori_menu_id' => 'required|exists:kategori_menu,id',
             'nama' => 'required|string|max:100',
             'harga' => 'required|integer|min:0',
-            'stok_fisik'  => 'required|integer|min:0',
-            'ambang_stok_rendah' => 'required|integer|min:0',
-            'batas_stok_rendah'  => 'required|integer|min:0',
+            'stok_fisik' => 'required|integer|min:0',
             'aktif' => 'boolean',
             'deskripsi' => 'nullable|string|max:500',
-            'foto' => 'nullable|image|max:10024',
+            'foto' => 'nullable|image|max:2048',
         ]);
 
         $payload = [
@@ -94,21 +92,18 @@ class MenuCrud extends Component
 
         if ($this->foto) {
             $path = $this->foto->store('menu', 'public');
-            $payload['path_foto'] = $path;
+            $data['path_foto'] = $path;
 
             if ($this->foto_lama) {
                 Storage::disk('public')->delete($this->foto_lama);
             }
         }
 
-        if ($this->editId) {
-            $m = Menu::findOrFail($this->editId);
-            $m->update($payload);
-        } else {
-            // stok_dipesan jangan ikut form, default 0 saat create
-            $payload['stok_dipesan'] = 0;
-            Menu::create($payload);
-        }
+        unset($data['foto']);
+
+        $this->editId
+            ? Menu::whereKey($this->editId)->update($data)
+            : Menu::create($data);
 
         $this->modal = false;
         session()->flash('pesan_sukses', 'Menu berhasil disimpan.');

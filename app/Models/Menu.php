@@ -49,7 +49,6 @@ class Menu extends Model
         return $this->hasMany(MutasiStok::class, 'menu_id');
     }
 
-    // stok tersedia = stok_fisik - stok_dipesan
     public function getStokTersediaAttribute(): int
     {
         return max(0, (int)$this->stok_fisik - (int)$this->stok_dipesan);

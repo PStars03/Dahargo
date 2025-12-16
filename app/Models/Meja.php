@@ -12,7 +12,7 @@ class Meja extends Model
 
     protected $table = 'meja';
 
-    protected $fillable = ['nama', 'lokasi', 'token_qr', 'aktif'];
+    protected $fillable = ['nama', 'lokasi', 'token_qr', 'aktif','path_foto'];
 
     protected $casts = ['aktif' => 'boolean'];
 

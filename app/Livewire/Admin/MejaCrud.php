@@ -6,10 +6,11 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Meja;
 use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class MejaCrud extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public string $cari = '';
 
