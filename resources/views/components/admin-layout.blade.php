@@ -80,22 +80,38 @@
                         {{-- notif pesanan masuk (sudah ada di project Anda) --}}
                         <livewire:admin.notifikasi-pesanan-masuk />
 
-                        {{-- user dropdown sederhana --}}
+                        {{-- profile dropdown --}}
                         <div class="relative">
-                            <div class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm">
+                            <button id="profileBtn" type="button"
+                                class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50">
                                 <span class="h-7 w-7 rounded-full bg-gray-200 inline-flex items-center justify-center text-xs font-semibold text-gray-700">
                                     {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
                                 </span>
-                                <span class="hidden sm:inline">{{ auth()->user()->name ?? 'Administrator' }}</span>
+                                <span class="hidden sm:inline font-medium text-gray-800">
+                                    {{ auth()->user()->name ?? 'Administrator' }}
+                                </span>
+                                <svg class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.24 4.5a.75.75 0 01-1.08 0l-4.24-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+
+                            <div id="profileMenu"
+                                class="absolute right-0 mt-2 hidden w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg z-50">
+                                <div class="px-4 py-3">
+                                    <p class="text-xs text-gray-500">Login sebagai</p>
+                                    <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->email }}</p>
+                                </div>
+
+                                <div class="h-px bg-gray-100"></div>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                        Logout
+                                    </button>
+                                </form>
                             </div>
                         </div>
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50">
-                                Logout
-                            </button>
-                        </form>
                     </div>
                 </div>
             </header>
@@ -131,6 +147,27 @@
 
     if (btn) btn.addEventListener('click', openSidebar);
     if (overlay) overlay.addEventListener('click', closeSidebar);
+})();
+
+(function () {
+    const btn = document.getElementById('profileBtn');
+    const menu = document.getElementById('profileMenu');
+
+    if (!btn || !menu) return;
+
+    function open() { menu.classList.remove('hidden'); }
+    function close() { menu.classList.add('hidden'); }
+    function toggle() { menu.classList.contains('hidden') ? open() : close(); }
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggle();
+    });
+
+    document.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') close();
+    });
 })();
 </script>
 

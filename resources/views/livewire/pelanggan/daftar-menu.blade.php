@@ -55,6 +55,10 @@
             <div class="rounded-xl border bg-white p-4 shadow-sm">
                 <div class="flex items-start justify-between gap-3">
                     <div>
+                        <img class="h-12 w-12 rounded-md object-cover border"
+                                 src="{{ $m->path_foto ? asset('storage/'.$m->path_foto) : 'https://via.placeholder.com/80' }}">
+                    </div>
+                    <div>
                         <p class="text-base font-semibold text-gray-900">{{ $m->nama }}</p>
                         @if($m->deskripsi)
                             <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ $m->deskripsi }}</p>
