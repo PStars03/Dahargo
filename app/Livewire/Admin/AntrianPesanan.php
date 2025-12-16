@@ -12,6 +12,16 @@ class AntrianPesanan extends Component
 {
     use WithPagination;
 
+    // Jangan simpan $pesanan di property kalau pakai paginate
+    // public $pesanan = [];
+
+    public function muat()
+    {
+        // Polling cukup "trigger render ulang"
+        // kalau ada filter/search nanti bisa resetPage() juga
+        $this->resetPage();
+    }
+
     public function batalkan(int $pesananId): void
     {
         DB::transaction(function () use ($pesananId) {
@@ -22,7 +32,6 @@ class AntrianPesanan extends Component
                 return;
             }
 
-            // lepas reservasi stok
             app(StokService::class)->lepasReservasi($p, auth()->id());
 
             $p->status = Pesanan::STATUS_DIBATALKAN;
@@ -41,6 +50,7 @@ class AntrianPesanan extends Component
             ->orderByDesc('waktu_pesan')
             ->paginate(15);
 
-        return view('livewire.admin.antrian-pesanan', compact('pesanan'));
+        return view('livewire.admin.antrian-pesanan', compact('pesanan'))
+            ->layout('components.admin-layout');
     }
 }

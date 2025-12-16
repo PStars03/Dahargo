@@ -1,4 +1,7 @@
-<div wire:poll.5s="muat">
+<div wire:key="notif-pesanan"
+    @if($enablePoll)
+        wire:poll.5s.visible="muat"
+    @endif>
     <a href="{{ route('admin.pesanan.index') }}"
        class="relative inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">

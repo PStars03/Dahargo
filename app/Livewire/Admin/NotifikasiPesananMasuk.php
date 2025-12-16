@@ -8,6 +8,7 @@ use Livewire\Component;
 class NotifikasiPesananMasuk extends Component
 {
     public int $jumlah = 0;
+    public bool $enablePoll = true;
 
     public function muat(): void
     {
