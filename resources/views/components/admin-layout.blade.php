@@ -19,7 +19,7 @@
 <body class="font-sans antialiased bg-gray-100">
 @php
     $menu = [
-        ['label' => 'Dashboard', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
+        ['label' => 'Dashboard', 'route' => 'admin.dashboard.index', 'active' => request()->routeIs('admin.dashboard.*')],
         ['label' => 'Meja', 'route' => 'admin.meja.index', 'active' => request()->routeIs('admin.meja.*')],
         ['label' => 'Pesanan', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
         ['label' => 'Stok Rendah', 'route' => 'admin.stok.rendah', 'active' => request()->routeIs('admin.stok.*')],
@@ -27,7 +27,7 @@
     ];
 @endphp
 
-<div class="min-h-screen">
+<div class="min-h-[100%]">
     {{-- overlay mobile --}}
     <div id="adminOverlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"></div>
 
@@ -130,6 +130,8 @@
     </div>
 </div>
 
+@livewireScripts
+
 <script>
 (function () {
     const sidebar = document.getElementById('adminSidebar');
@@ -171,6 +173,6 @@
 })();
 </script>
 
-@livewireScripts
+
 </body>
 </html>

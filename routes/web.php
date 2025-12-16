@@ -15,6 +15,7 @@ use App\Livewire\Admin\StokRendah;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\DashboardAdminController;
 
 Route::view('/', 'welcome');
 
@@ -40,6 +41,8 @@ Route::middleware([PastikanMejaTerpilih::class])->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardAdminController::class, 'index'])
+    ->name('admin.dashboard.index');
     Route::get('/meja', [MejaAdminController::class, 'index'])
         ->name('admin.meja.index');
     Route::view('/menu', 'admin.menu.index')
@@ -52,7 +55,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ->name('admin.pesanan.detail');
     Route::get('/stok-rendah', StokRendah::class)
         ->name('admin.stok.rendah');
-     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 });
