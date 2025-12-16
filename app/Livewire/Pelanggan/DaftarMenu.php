@@ -68,6 +68,8 @@ class DaftarMenu extends Component
         $this->simpanKeranjang($keranjang);
 
         $this->dispatch('toast', tipe: 'sukses', pesan: 'Ditambahkan ke keranjang.');
+
+
     }
 
     public function render()

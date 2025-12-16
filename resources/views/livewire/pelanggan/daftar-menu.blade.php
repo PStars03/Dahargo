@@ -1,4 +1,4 @@
-<div x-data="{ bukaKeranjang: false }" class="space-y-4">
+<div class="space-y-4">
     {{-- Header actions --}}
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>

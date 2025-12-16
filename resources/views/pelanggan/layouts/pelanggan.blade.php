@@ -14,7 +14,7 @@
     @livewireStyles
 </head>
 
-<body class="min-h-screen bg-gray-50 text-gray-900 justify-center">
+<body x-data="{ bukaKeranjang: false }" class="min-h-screen bg-gray-50 text-gray-900">
     <header class="border-b bg-white max-w-[825px] mx-auto rounded-md shadow-xl/30">
         <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between gap-4">
@@ -39,14 +39,16 @@
                         <p class="text-sm text-gray-500">Belum memilih meja</p>
                     @endif
                 </div>
-                <div x-data="{ bukaKeranjang: false }" class="space-y-4">
+                <div class="space-y-4">
                     <button type="button" x-on:click="bukaKeranjang = true" class="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">
-                        <span><i data-feather="shopping-cart"></i></span>
-                        <span class="rounded-md bg-white/15 px-2 py-0.5 text-xs">{{ $jumlahKeranjang }}</span>
+                            <span><i data-feather="shopping-cart"></i></span>
+                            @livewire(\App\Livewire\Pelanggan\KeranjangBadge::class)
                     </button>
                 </div>
             </div>
         </div>
+</span>
+
     </header>
 
     <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
@@ -63,6 +65,37 @@
 
         @endif
     </main>
+{{-- Drawer Keranjang (Global) --}}
+    <div
+        x-show="bukaKeranjang"
+        x-transition.opacity
+        class="fixed inset-0 z-40 bg-black/40"
+        x-on:click="bukaKeranjang=false"
+        style="display:none;"
+    ></div>
+
+    <div
+        x-show="bukaKeranjang"
+        x-transition
+        class="fixed right-0 top-0 z-50 h-full w-[min(92vw,420px)] bg-white shadow-xl"
+        x-on:keydown.escape.window="bukaKeranjang=false"
+        style="display:none;"
+    >
+        <div class="flex items-center justify-between border-b p-4">
+            <p class="text-base font-semibold">Keranjang</p>
+            <button
+                type="button"
+                x-on:click="bukaKeranjang=false"
+                class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50"
+            >
+                Tutup
+            </button>
+        </div>
+
+        <div class="p-4">
+            <livewire:pelanggan.keranjang-mini />
+        </div>
+    </div>
 
     @livewireScripts
 </body>
