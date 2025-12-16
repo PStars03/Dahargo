@@ -10,7 +10,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6" wire:poll.5s>
+    <div class="py-6" wire:poll.10s>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="rounded-xl border bg-white shadow-sm">
                 <div class="p-4 border-b">
