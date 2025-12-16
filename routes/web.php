@@ -12,6 +12,8 @@ use App\Livewire\Admin\AntrianPesanan;
 use App\Livewire\Pelanggan\RiwayatPesanan;
 use App\Livewire\Admin\DetailPesanan;
 use App\Livewire\Admin\StokRendah;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::view('/', 'welcome');
 
@@ -39,6 +41,10 @@ Route::middleware([PastikanMejaTerpilih::class])->group(function () {
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/meja', [MejaAdminController::class, 'index'])
         ->name('admin.meja.index');
+    Route::view('/menu', 'admin.menu.index')
+        ->name('admin.menu.index');
+    Route::view('/kategori', 'admin.kategori.index')
+        ->name('admin.kategori.index');
     Route::get('/pesanan', AntrianPesanan::class)
         ->name('admin.pesanan.index');
     Route::get('/pesanan/{pesanan}', DetailPesanan::class)
@@ -47,4 +53,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ->name('admin.stok.rendah');
 
 });
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+})->middleware('auth')->name('logout');
 require __DIR__.'/auth.php';

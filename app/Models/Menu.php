@@ -13,7 +13,16 @@ class Menu extends Model
 
     // stok sengaja TIDAK masuk fillable (anti manipulasi mass assignment)
     protected $fillable = [
-        'kategori_menu_id', 'nama', 'deskripsi', 'harga', 'path_foto', 'aktif', 'ambang_stok_rendah',
+        'kategori_menu_id',
+        'nama',
+        'deskripsi',
+        'harga',
+        'path_foto',
+        'aktif',
+        'stok_fisik',
+        'stok_dipesan',
+        'batas_stok_rendah',
+        'ambang_stok_rendah',
     ];
 
     protected $casts = [
@@ -21,6 +30,7 @@ class Menu extends Model
         'harga' => 'integer',
         'stok_fisik' => 'integer',
         'stok_dipesan' => 'integer',
+        'batas_stok_rendah' => 'integer',
         'ambang_stok_rendah' => 'integer',
     ];
 

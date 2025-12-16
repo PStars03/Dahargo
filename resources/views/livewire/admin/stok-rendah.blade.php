@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold text-gray-800">Peringatan Stok Rendah</h2>
     </x-slot>
@@ -34,4 +34,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'DaharGo') }} - Admin</title>
+
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- penting untuk Livewire --}}
+    @livewireStyles
+</head>
+
+<body class="font-sans antialiased bg-gray-100">
+@php
+    $menu = [
+        ['label' => 'Dashboard', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
+        ['label' => 'Meja', 'route' => 'admin.meja.index', 'active' => request()->routeIs('admin.meja.*')],
+        ['label' => 'Pesanan', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
+        ['label' => 'Stok Rendah', 'route' => 'admin.stok.rendah', 'active' => request()->routeIs('admin.stok.*')],
+        ['label' => 'Menu', 'route' => 'admin.menu.index', 'active' => request()->routeIs('admin.menu.*')],
+    ];
+@endphp
+
+<div class="min-h-screen">
+    {{-- overlay mobile --}}
+    <div id="adminOverlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"></div>
+
+    <div class="flex">
+        {{-- SIDEBAR --}}
+        <aside id="adminSidebar"
+               class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full bg-slate-800 text-slate-100 transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto">
+            <div class="flex items-center gap-3 px-5 py-5 border-b border-white/10">
+                <div class="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center">
+                    <span class="text-lg font-bold">D</span>
+                </div>
+                <div>
+                    <div class="text-lg font-semibold leading-tight">{{ config('app.name', 'DaharGo') }}</div>
+                    <div class="text-xs text-slate-300">Admin Panel</div>
+                </div>
+            </div>
+
+            <nav class="px-3 py-4 space-y-1">
+                @foreach($menu as $item)
+                    <a href="{{ route($item['route']) }}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium
+                              {{ $item['active'] ? 'bg-blue-600 text-white' : 'text-slate-200 hover:bg-white/10' }}">
+                        <span class="h-2 w-2 rounded-full {{ $item['active'] ? 'bg-white' : 'bg-slate-400' }}"></span>
+                        {{ $item['label'] }}
+                    </a>
+                @endforeach
+            </nav>
+
+            <div class="mt-auto px-5 py-4 text-xs text-slate-400 border-t border-white/10">
+                © {{ date('Y') }} {{ config('app.name','DaharGo') }}
+            </div>
+        </aside>
+
+        {{-- MAIN --}}
+        <div class="flex-1 lg:ml-64">
+            {{-- TOPBAR --}}
+            <header class="sticky top-0 z-20 border-b bg-white/90 backdrop-blur">
+                <div class="flex items-center justify-between px-4 py-3 lg:px-6">
+                    <div class="flex items-center gap-3">
+                        <button id="adminSidebarBtn"
+                                class="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50 lg:hidden">
+                            ☰
+                        </button>
+                        <div class="text-sm text-gray-500">
+                            Admin
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        {{-- notif pesanan masuk (sudah ada di project Anda) --}}
+                        <livewire:admin.notifikasi-pesanan-masuk />
+
+                        {{-- user dropdown sederhana --}}
+                        <div class="relative">
+                            <div class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm">
+                                <span class="h-7 w-7 rounded-full bg-gray-200 inline-flex items-center justify-center text-xs font-semibold text-gray-700">
+                                    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                                </span>
+                                <span class="hidden sm:inline">{{ auth()->user()->name ?? 'Administrator' }}</span>
+                            </div>
+                        </div>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </header>
+
+            <main class="px-4 py-6 lg:px-6">
+                {{-- HEADER SLOT (kompatibel seperti x-app-layout) --}}
+                @if (isset($header))
+                    <div class="mb-6">
+                        {{ $header }}
+                    </div>
+                @endif
+
+                {{ $slot }}
+            </main>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const sidebar = document.getElementById('adminSidebar');
+    const overlay = document.getElementById('adminOverlay');
+    const btn = document.getElementById('adminSidebarBtn');
+
+    function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+    }
+    function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    }
+
+    if (btn) btn.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+})();
+</script>
+
+@livewireScripts
+</body>
+</html>
