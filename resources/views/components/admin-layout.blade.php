@@ -134,29 +134,50 @@
 
 @livewireScripts
 
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
-<script>
-    window.notyf = new Notyf({
-        duration: 3000,
-        position: {
-            x: 'right',
-            y: 'top',
-        },
-        dismissible: true,
-        ripple: true,
-    });
+    <script>
+    function bootNotyfBridge() {
+        // bikin instance kalau belum ada
+        window.notyf = window.notyf || new Notyf({
+        duration: 2500,
+        position: { x: 'right', y: 'top' },
+        });
 
-    // listener dari Livewire
-    window.addEventListener('notyf', (event) => {
-        const { type, message } = event.detail;
+        console.log('[Notyf] boot');
 
-        if (type === 'success') notyf.success(message);
-        if (type === 'error') notyf.error(message);
-        if (type === 'info') notyf.open({ type: 'info', message });
-        if (type === 'warning') notyf.open({ type: 'warning', message });
-    });
-</script>
+        // pasang listener Livewire (jangan dobel)
+        if (window.Livewire && !window.__notyfLivewireBound) {
+        window.__notyfLivewireBound = true;
+
+        Livewire.on('notyf', (payload = {}) => {
+            console.log('[Notyf] received', payload);
+
+            const type = payload.type ?? payload.tipe ?? 'success';
+            const message = payload.message ?? payload.pesan ?? 'OK';
+
+            window.notyf.open({ type, message });
+        });
+        }
+
+        // flash dari session (buat kasus redirect)
+        @if (session()->has('notyf'))
+        const data = @json(session('notyf'));
+        window.notyf.open({
+            type: data.type ?? data.tipe ?? 'success',
+            message: data.message ?? data.pesan ?? 'OK',
+        });
+        @endif
+    }
+
+    // jalanin SEKARANG (ini yang bikin pasti muncul)
+    bootNotyfBridge();
+
+    // backup kalau Livewire re-init / navigasi
+    document.addEventListener('livewire:init', bootNotyfBridge);
+    document.addEventListener('livewire:navigated', bootNotyfBridge);
+    </script>
 
 
 <script>
@@ -199,8 +220,6 @@
     });
 })();
 </script>
-
-
 
 </body>
 </html>
