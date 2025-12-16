@@ -1,4 +1,4 @@
-<x-admin-layout>
+
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-gray-800">Antrian Pesanan</h2>
@@ -9,7 +9,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6" wire:poll.10s>
+    <div wire:poll.5s.visible="muat">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="rounded-xl border bg-white shadow-sm">
                 <div class="p-4 border-b">
@@ -18,6 +18,7 @@
 
                 <div class="divide-y">
                     @foreach($pesanan as $p)
+                    <div wire:key="pesanan-{{ $p->id }}">
                         <a href="{{ route('admin.pesanan.detail', $p->id) }}"
                            class="block p-4 hover:bg-gray-50">
                             <div class="flex items-center justify-between">
@@ -34,6 +35,7 @@
                                 </p>
                             </div>
                         </a>
+                    </div>
                     @endforeach
                 </div>
 
@@ -43,4 +45,3 @@
             </div>
         </div>
     </div>
-</x-admin-layout>

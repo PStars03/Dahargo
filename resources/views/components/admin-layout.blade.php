@@ -78,8 +78,9 @@
 
                     <div class="flex items-center gap-3">
                         {{-- notif pesanan masuk (sudah ada di project Anda) --}}
-                        <livewire:admin.notifikasi-pesanan-masuk />
-
+                        <livewire:admin.notifikasi-pesanan-masuk
+                        :enablePoll= 
+                        "!request()->routeIs('admin.pesanan.*')"/>
                         {{-- profile dropdown --}}
                         <div class="relative">
                             <button id="profileBtn" type="button"
