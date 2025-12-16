@@ -29,6 +29,11 @@
                                     <p class="text-xs text-gray-500">
                                         {{ $p->metode_pembayaran }} • {{ $p->status_pembayaran }} • {{ $p->status }}
                                     </p>
+                                    @if(filled($p->catatan_pelanggan))
+                                        <p class="mt-1 text-xs text-yellow-700">
+                                            Catatan: {{ \Illuminate\Support\Str::limit($p->catatan_pelanggan, 40) }}
+                                        </p>
+                                    @endif
                                 </div>
                                 <p class="text-sm font-bold">
                                     Rp {{ number_format($p->total,0,',','.') }}

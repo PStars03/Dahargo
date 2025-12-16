@@ -42,6 +42,14 @@
                         </a>
                     </div>
                 @endif
+                @if(filled($pesanan->catatan_pelanggan))
+                    <div class="mt-4 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+                        <p class="text-sm font-semibold text-yellow-800">Catatan Pelanggan</p>
+                        <p class="mt-1 text-sm text-yellow-900 whitespace-pre-line">
+                            {{ $pesanan->catatan_pelanggan }}
+                        </p>
+                    </div>
+                @endif
             </div>
 
             <div class="rounded-xl border bg-white p-6 shadow-sm">
@@ -55,6 +63,11 @@
                                 <p class="text-xs text-gray-500">
                                     Rp {{ number_format($it->harga_snapshot,0,',','.') }} × {{ $it->jumlah }}
                                 </p>
+                                @if(filled($it->catatan))
+                                    <p class="mt-1 text-xs text-gray-600 whitespace-pre-line">
+                                        <b>Catatan item:</b> {{ $it->catatan }}
+                                    </p>
+                                @endif
                             </div>
                             <p class="text-sm font-semibold">
                                 Rp {{ number_format($it->total_baris,0,',','.') }}
