@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\Auth;
 
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/dashboard', function () {
+    return redirect()->route('admin.meja.index');
+})->middleware(['auth'])->name('dashboard');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
@@ -36,7 +36,7 @@ Route::middleware([PastikanMejaTerpilih::class])->group(function () {
     Route::get('/riwayat', RiwayatPesanan::class)->name('pelanggan.riwayat');
     Route::get('/struk/{kode}', [StrukController::class, 'show'])->name('pelanggan.struk');
     Route::get('/struk/{kode}/pdf', [StrukController::class, 'pdf'])->name('pelanggan.struk.pdf');
-});  
+});
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/meja', [MejaAdminController::class, 'index'])

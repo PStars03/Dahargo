@@ -6,14 +6,7 @@
             <p class="text-sm text-gray-600">Pilih menu, lalu checkout tanpa login.</p>
         </div>
 
-        <button
-            type="button"
-            x-on:click="bukaKeranjang = true"
-            class="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
-        >
-            <span>Keranjang</span>
-            <span class="rounded-md bg-white/15 px-2 py-0.5 text-xs">{{ $jumlahKeranjang }}</span>
-        </button>
+
     </div>
 
     {{-- Filter --}}

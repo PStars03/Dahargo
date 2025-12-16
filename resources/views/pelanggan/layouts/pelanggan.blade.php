@@ -14,8 +14,8 @@
     @livewireStyles
 </head>
 
-<body class="min-h-screen bg-gray-50 text-gray-900">
-    <header class="border-b bg-white">
+<body class="min-h-screen bg-gray-50 text-gray-900 justify-center">
+    <header class="border-b bg-white max-w-[825px] mx-auto rounded-md shadow-xl/30">
         <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between gap-4">
                 <div>
@@ -39,6 +39,12 @@
                         <p class="text-sm text-gray-500">Belum memilih meja</p>
                     @endif
                 </div>
+                <div x-data="{ bukaKeranjang: false }" class="space-y-4">
+                    <button type="button" x-on:click="bukaKeranjang = true" class="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">
+                        <span><i data-feather="shopping-cart"></i></span>
+                        <span class="rounded-md bg-white/15 px-2 py-0.5 text-xs">{{ $jumlahKeranjang }}</span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -54,7 +60,7 @@
             @yield('konten')
         @else
             {{ $slot }}
-            
+
         @endif
     </main>
 
