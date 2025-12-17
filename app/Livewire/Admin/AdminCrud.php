@@ -73,8 +73,7 @@ class AdminCrud extends Component
 
         User::updateOrCreate(['id' => $this->editId], $data);
 
-        $this->modal = false;
-        session()->flash('pesan_sukses', 'Admin berhasil disimpan.');
+        $this->dispatch('notif', type: 'success', message: 'Berhasil Disimpan!!');
     }
 
     public function toggleAktif(int $id)
