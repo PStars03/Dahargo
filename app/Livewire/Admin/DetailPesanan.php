@@ -53,14 +53,14 @@ class DetailPesanan extends Component
                 $stokService->komitTerjual($p, $userId);
             });
 
-            $this->dispatch('toast', tipe: 'sukses', pesan: 'Pembayaran diverifikasi & stok dikomit.');
+            $this->dispatch('notyf', tipe: 'success', pesan: 'Pembayaran diverifikasi & stok dikomit.');
             $this->muat();
         } catch (ValidationException $e) {
             $msg = collect($e->errors())->flatten()->first() ?? 'Validasi gagal.';
-            $this->dispatch('toast', tipe: 'error', pesan: $msg);
+            $this->dispatch('notyf', tipe: 'error', pesan: $msg);
         } catch (Throwable $e) {
             report($e);
-            $this->dispatch('toast', tipe: 'error', pesan: 'Terjadi error saat verifikasi. Cek storage/logs/laravel.log');
+            $this->dispatch('notyf', tipe: 'error', pesan: 'Terjadi error saat verifikasi. Cek storage/logs/laravel.log');
         }
     }
 
@@ -93,14 +93,14 @@ class DetailPesanan extends Component
                 $stokService->lepasReservasi($p, $userId);
             });
 
-            $this->dispatch('toast', tipe: 'info', pesan: 'Pembayaran ditolak, reservasi stok dilepas.');
+            $this->dispatch('notyf', tipe: 'info', pesan: 'Pembayaran ditolak, reservasi stok dilepas.');
             $this->muat();
         } catch (ValidationException $e) {
             $msg = collect($e->errors())->flatten()->first() ?? 'Validasi gagal.';
             $this->dispatch('toast', tipe: 'error', pesan: $msg);
         } catch (Throwable $e) {
             report($e);
-            $this->dispatch('toast', tipe: 'error', pesan: 'Terjadi error saat menolak. Cek storage/logs/laravel.log');
+            $this->dispatch('notyf', tipe: 'error', pesan: 'Terjadi error saat menolak. Cek storage/logs/laravel.log');
         }
     }
 
