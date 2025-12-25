@@ -25,7 +25,7 @@
         ['label' => 'Pesanan', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
         ['label' => 'Stok Rendah', 'route' => 'admin.stok.rendah', 'active' => request()->routeIs('admin.stok.*')],
         ['label' => 'Menu', 'route' => 'admin.menu.index', 'active' => request()->routeIs('admin.menu.*')],
-        ['label' => 'Laporan Omzet', 'route' => 'admin.laporan.omzet', 'active' => request()->routeIs('admin.laporan.omzet.*')],
+        ['label' => 'Laporan Omzet', 'route' => 'admin.laporan.omzet', 'active' => request()->routeIs('admin.laporan.omzet*')],
     ];
 
     if (auth()->check() && auth()->user()->role === 'superadmin') {

@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Livewire\Admin\AdminCrud;
 use App\Http\Controllers\Admin\LaporanOmzetController;
 use App\Http\Controllers\Admin\PesananStrukController;
+use App\Livewire\Admin\LaporanOmzet;
 
 Route::view('/', 'welcome');
 
@@ -63,7 +64,7 @@ Route::middleware(['auth', 'user.active', 'admin.only'])->prefix('admin')->group
     Route::get('/admins', AdminCrud::class)
         ->middleware('superadmin.only')
         ->name('admin.admins.index');
-    Route::get('/laporan/omzet', [LaporanOmzetController::class, 'index'])
+    Route::get('/laporan/omzet', LaporanOmzet::class)
         ->name('admin.laporan.omzet');
     Route::get('/laporan/omzet/pdf', [LaporanOmzetController::class, 'pdf'])
         ->name('admin.laporan.omzet.pdf');
