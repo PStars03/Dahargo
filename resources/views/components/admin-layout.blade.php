@@ -11,7 +11,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- penting untuk Livewire --}}
@@ -26,6 +25,7 @@
         ['label' => 'Pesanan', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
         ['label' => 'Stok Rendah', 'route' => 'admin.stok.rendah', 'active' => request()->routeIs('admin.stok.*')],
         ['label' => 'Menu', 'route' => 'admin.menu.index', 'active' => request()->routeIs('admin.menu.*')],
+        ['label' => 'Laporan Omzet', 'route' => 'admin.laporan.omzet', 'active' => request()->routeIs('admin.laporan.omzet.*')],
     ];
 
     if (auth()->check() && auth()->user()->role === 'superadmin') {
@@ -137,98 +137,87 @@
 </div>
 
     @livewireScripts
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
     <script>
-        function bootNotyfBridge() {
+    function bootNotyfBridge() {
         window.notyf = window.notyf || new Notyf({
-            duration: 2500,
-            position: { x: 'right', y: 'top' },
-
-            // ✅ custom warna type
-            types: [
-            { type: 'pesanan', background: '#2563eb', icon: false }, // biru (bg-blue-600)
-            { type: 'success', background: '#16a34a', icon: false }, // hijau
-            { type: 'error',   background: '#dc2626', icon: false }, // merah
-            { type: 'warning', background: '#f59e0b', icon: false }, // kuning
-            { type: 'info',    background: '#0ea5e9', icon: false }, // biru muda
-            ],
+        duration: 2500,
+        position: { x: 'right', y: 'top' },
+        dismissible: true,
+        types: [
+            { type: 'pesanan', background: '#2563eb', icon: false },
+            { type: 'success', background: '#16a34a', icon: false },
+            { type: 'error',   background: '#dc2626', icon: false },
+            { type: 'warning', background: '#f59e0b', icon: false },
+            { type: 'info',    background: '#0ea5e9', icon: false },
+        ],
         });
 
+        // bind sekali saja
         if (window.Livewire && !window.__notyfLivewireBound) {
-            window.__notyfLivewireBound = true;
+        window.__notyfLivewireBound = true;
 
-            Livewire.on('notyf', (payload = {}) => {
+        Livewire.on('notyf', (payload = {}) => {
             let type = payload.type ?? payload.tipe ?? 'success';
             const message = payload.message ?? payload.pesan ?? 'OK';
 
-            // ✅ normalisasi istilah lama (biar konsisten)
-            if (type === 'sukses') type = 'pesanan'; // atau 'success' kalau kamu mau hijau
+            if (type === 'sukses') type = 'pesanan';
 
             window.notyf.open({ type, message });
-            });
+        });
         }
 
+        // flash dari server
         @if (session()->has('notyf'))
+        (function(){
             const data = @json(session('notyf'));
             let type = data.type ?? data.tipe ?? 'success';
             if (type === 'sukses') type = 'pesanan';
-            window.notyf.open({
-            type,
-            message: data.message ?? data.pesan ?? 'OK',
-            });
+            window.notyf.open({ type, message: data.message ?? data.pesan ?? 'OK' });
+        })();
         @endif
-        }
+    }
 
-        bootNotyfBridge();
-        document.addEventListener('livewire:init', bootNotyfBridge);
-        document.addEventListener('livewire:navigated', bootNotyfBridge);
+    bootNotyfBridge();
+    document.addEventListener('livewire:init', bootNotyfBridge);
+    document.addEventListener('livewire:navigated', bootNotyfBridge);
     </script>
-
-
 
     <script>
     (function () {
         const sidebar = document.getElementById('adminSidebar');
         const overlay = document.getElementById('adminOverlay');
         const btn = document.getElementById('adminSidebarBtn');
-
         function openSidebar() {
             sidebar.classList.remove('-translate-x-full');
             overlay.classList.remove('hidden');
-        }
+            }
         function closeSidebar() {
             sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        }
-
-        if (btn) btn.addEventListener('click', openSidebar);
-        if (overlay) overlay.addEventListener('click', closeSidebar);
-    })();
-
-    (function () {
-        const btn = document.getElementById('profileBtn');
-        const menu = document.getElementById('profileMenu');
-
-        if (!btn || !menu) return;
-
-        function open() { menu.classList.remove('hidden'); }
-        function close() { menu.classList.add('hidden'); }
-        function toggle() { menu.classList.contains('hidden') ? open() : close(); }
-
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggle();
-        });
-
-        document.addEventListener('click', close);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') close();
-        });
-    })();
+            overlay.classList.add('hidden'); }
+            if (btn) btn.addEventListener('click', openSidebar);
+            if (overlay) overlay.addEventListener('click', closeSidebar);
+            })();
+        (function () {
+            const btn = document.getElementById('profileBtn');
+            const menu = document.getElementById('profileMenu');
+            if (!btn || !menu) return;
+            function open() {
+                menu.classList.remove('hidden');
+                }
+                function close() {
+                    menu.classList.add('hidden');
+                    }
+                    function toggle() {
+                        menu.classList.contains('hidden') ? open() : close();
+                        }
+                        btn.addEventListener('click', (e) => { e.stopPropagation();
+                        toggle();
+                        });
+            document.addEventListener('click', close);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close();
+            }); })();
     </script>
-
 </body>
 </html>

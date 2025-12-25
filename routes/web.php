@@ -17,11 +17,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Livewire\Admin\AdminCrud;
+use App\Http\Controllers\Admin\LaporanOmzetController;
+use App\Http\Controllers\Admin\PesananStrukController;
 
 Route::view('/', 'welcome');
 
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.meja.index');
+    return redirect()->route('admin.dashboard.index');
 })->middleware(['auth'])->name('dashboard');
 
 Route::view('profile', 'profile')
@@ -61,7 +63,13 @@ Route::middleware(['auth', 'user.active', 'admin.only'])->prefix('admin')->group
     Route::get('/admins', AdminCrud::class)
         ->middleware('superadmin.only')
         ->name('admin.admins.index');
-
+    Route::get('/laporan/omzet', [LaporanOmzetController::class, 'index'])
+        ->name('admin.laporan.omzet');
+    Route::get('/laporan/omzet/pdf', [LaporanOmzetController::class, 'pdf'])
+        ->name('admin.laporan.omzet.pdf');
+    Route::get('/admin/pesanan/{pesanan}/Struk', [PesananStrukController::class, 'show'])
+        ->middleware(['auth', 'user.active', 'admin.only'])
+        ->name('admin.pesanan.struk');
 });
 
 Route::post('/logout', function (Request $request) {
