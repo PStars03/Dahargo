@@ -22,7 +22,8 @@
     $menu = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard.index', 'active' => request()->routeIs('admin.dashboard.*')],
         ['label' => 'Meja', 'route' => 'admin.meja.index', 'active' => request()->routeIs('admin.meja.*')],
-        ['label' => 'Pesanan', 'route' => 'admin.pesanan.index', 'active' => request()->routeIs('admin.pesanan.*')],
+        ['label' => 'Pesanan Masuk', 'route' => 'admin.pesanan.masuk', 'active' => request()->routeIs('admin.pesanan.detail') || request()->routeIs('admin.pesanan.masuk')],
+        ['label' => 'Riwayat Pesanan', 'route' => 'admin.pesanan.riwayat', 'active' => request()->routeIs('admin.pesanan.riwayat')],
         ['label' => 'Stok Rendah', 'route' => 'admin.stok.rendah', 'active' => request()->routeIs('admin.stok.*')],
         ['label' => 'Menu', 'route' => 'admin.menu.index', 'active' => request()->routeIs('admin.menu.*')],
         ['label' => 'Laporan Omzet', 'route' => 'admin.laporan.omzet', 'active' => request()->routeIs('admin.laporan.omzet*')],

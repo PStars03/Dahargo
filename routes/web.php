@@ -55,8 +55,6 @@ Route::middleware(['auth', 'user.active', 'admin.only'])->prefix('admin')->group
         ->name('admin.kategori.index');
     Route::get('/pesanan', AntrianPesanan::class)
         ->name('admin.pesanan.index');
-    Route::get('/pesanan/{pesanan}', DetailPesanan::class)
-        ->name('admin.pesanan.detail');
     Route::get('/stok-rendah', StokRendah::class)
         ->name('admin.stok.rendah');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -71,6 +69,13 @@ Route::middleware(['auth', 'user.active', 'admin.only'])->prefix('admin')->group
     Route::get('/admin/pesanan/{pesanan}/Struk', [PesananStrukController::class, 'show'])
         ->middleware(['auth', 'user.active', 'admin.only'])
         ->name('admin.pesanan.struk');
+    Route::get('/pesanan/masuk', \App\Livewire\Admin\PesananMasuk::class)->name('admin.pesanan.masuk');
+    Route::get('/pesanan/riwayat', \App\Livewire\Admin\PesananRiwayat::class)->name('admin.pesanan.riwayat');
+    Route::redirect('/pesanan', '/admin/pesanan/masuk')->name('admin.pesanan.index');
+
+    Route::get('/pesanan/{pesanan}', DetailPesanan::class)
+        ->name('admin.pesanan.detail');
+
 });
 
 Route::post('/logout', function (Request $request) {

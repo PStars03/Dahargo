@@ -9,39 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class AntrianPesanan extends Component
+class PesananMasuk extends Component
 {
     use WithPagination;
 
-    public string $tab = 'masuk'; // masuk | riwayat
-    public ?string $statusFilter = null;
-
-    // ❗JANGAN simpan 'page' di queryString, biar kita pakai pageName per tab
-    protected $queryString = [
-        'tab' => ['except' => 'masuk'],
-        'statusFilter' => ['except' => null],
-    ];
-
-    private function pageName(): string
-    {
-        return $this->tab === 'masuk' ? 'page_masuk' : 'page_riwayat';
-    }
-
-    public function setTab(string $tab): void
-    {
-        $this->tab = in_array($tab, ['masuk','riwayat'], true) ? $tab : 'masuk';
-        $this->statusFilter = null;
-
-        // reset page sesuai tab
-        $this->resetPage($this->pageName());
-    }
-
-    public function updatedStatusFilter(): void
-    {
-        $this->resetPage($this->pageName());
-    }
-
-    public function muat()
+    public function muat(): void
     {
         $this->dispatch('$refresh');
     }
@@ -63,6 +35,7 @@ class AntrianPesanan extends Component
         });
 
         session()->flash('notyf', ['type' => 'warning', 'message' => 'Pesanan dibatalkan & reservasi stok dilepas.']);
+        $this->resetPage();
     }
 
     public function setVerifikasi(int $pesananId, string $status): void
@@ -97,7 +70,7 @@ class AntrianPesanan extends Component
             });
 
             $this->dispatch('notyf', type: 'success', message: 'Pembayaran berhasil diverifikasi');
-            $this->resetPage($this->pageName());
+            $this->resetPage();
         } catch (\Throwable $e) {
             $this->dispatch('notyf', type: 'error', message: $e->getMessage());
         }
@@ -112,9 +85,7 @@ class AntrianPesanan extends Component
                 $p = Pesanan::query()->lockForUpdate()->findOrFail($pesananId);
 
                 $boleh = $p->status_pembayaran === Pesanan::BAYAR_LUNAS || $p->metode_pembayaran === 'tunai';
-                if (!$boleh) {
-                    throw new \RuntimeException('Pembayaran belum lunas');
-                }
+                if (!$boleh) throw new \RuntimeException('Pembayaran belum lunas');
 
                 $p->status = $status;
                 $p->save();
@@ -122,13 +93,13 @@ class AntrianPesanan extends Component
 
             $this->dispatch('notyf', type: 'success', message: 'Status pesanan diperbarui');
 
-            // ✅ kalau selesai, langsung pindah ke riwayat
+            // ✅ selesai => pindah ke halaman riwayat
             if ($status === Pesanan::STATUS_SELESAI) {
-                $this->tab = 'riwayat';
-                $this->statusFilter = null;
+                $this->redirectRoute('admin.pesanan.riwayat', navigate: true);
+                return;
             }
 
-            $this->resetPage($this->pageName());
+            $this->resetPage();
         } catch (\Throwable $e) {
             $this->dispatch('notyf', type: 'error', message: $e->getMessage());
         }
@@ -136,22 +107,13 @@ class AntrianPesanan extends Component
 
     public function render()
     {
-        $q = Pesanan::query()
+        $pesanan = Pesanan::query()
             ->with('meja')
-            ->orderByDesc('waktu_pesan');
+            ->whereNotIn('status', [Pesanan::STATUS_SELESAI, Pesanan::STATUS_DIBATALKAN])
+            ->orderByDesc('waktu_pesan')
+            ->paginate(15);
 
-        if ($this->tab === 'masuk') {
-            $q->whereNotIn('status', [Pesanan::STATUS_SELESAI, Pesanan::STATUS_DIBATALKAN]);
-        } else {
-            $q->whereIn('status', [Pesanan::STATUS_SELESAI, Pesanan::STATUS_DIBATALKAN]);
-        }
-
-        $q->when(filled($this->statusFilter), fn($q) => $q->where('status', $this->statusFilter));
-
-        // ✅ paginate pakai pageName per tab
-        $pesanan = $q->paginate(15, ['*'], $this->pageName());
-
-        return view('livewire.admin.antrian-pesanan', compact('pesanan'))
+        return view('livewire.admin.pesanan-masuk', compact('pesanan'))
             ->layout('components.admin-layout');
     }
 }

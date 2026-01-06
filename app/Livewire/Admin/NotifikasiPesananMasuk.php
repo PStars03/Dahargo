@@ -8,59 +8,43 @@ use Livewire\Component;
 class NotifikasiPesananMasuk extends Component
 {
     public int $jumlah = 0;
-    public int $sebelumnya = 0;
     public bool $enablePoll = true;
 
-    public function muat(bool $toast = false): void
+    public int $lastSeenId = 0;
+
+    public function mount(): void
     {
-        $baru = Pesanan::query()
+        $this->lastSeenId = (int) session('admin_last_seen_order_id', 0);
+        $this->jumlah = $this->hitungMenunggu();
+    }
+
+    public function muat(bool $toast = true): void
+    {
+        $this->jumlah = $this->hitungMenunggu();
+
+        if (!$toast) return;
+
+        $adaBaru = Pesanan::query()
+            ->where('id', '>', $this->lastSeenId)
             ->where('status', Pesanan::STATUS_MENUNGGU)
             ->count();
 
-        if ($toast && $baru > $this->jumlah) {
-            $selisih = $baru - $this->jumlah;
+        if ($adaBaru > 0) {
             $this->dispatch('notyf',
                 type: 'success',
-                message: $selisih === 1
-                    ? 'Pesanan baru masuk!'
-                    : "{$selisih} pesanan baru masuk!"
+                message: $adaBaru === 1 ? 'Pesanan baru masuk!' : "Ada {$adaBaru} pesanan baru!"
             );
-        }
 
-        $this->jumlah = $baru;
-    }
-
-    public function mount(bool $enablePoll = true): void
-    {
-        $this->enablePoll = $enablePoll;
-
-        $this->lastSeenId = session('admin_last_seen_order_id', (int) (Pesanan::max('id' ?? 0)));
-        $this->badge = $this->hitungMenunggu();
-    }
-
-    public function cekPesananMasuk(): void
-    {
-        if (! $this->enablePoll) return;
-
-        // contoh: status "menunggu" = pesanan baru (sesuaikan field/status di DB kamu)
-        $adaBaru = Pesanan::where('id', '>', $this->lastSeenId)
-            ->where('status', 'menunggu')
-            ->count();
-
-        if ($adaBaru > 0) {
-            $this->dispatch('notyf', type: 'success', message: "Ada {$adaBaru} pesanan baru!");
-
-            // update marker supaya tidak muncul berulang untuk pesanan yang sama
-            $this->lastSeenId = (int) (Pesanan::max('id') ?? $this->lastSeenId);
+            $this->lastSeenId = (int) (Pesanan::query()->max('id') ?? $this->lastSeenId);
             session(['admin_last_seen_order_id' => $this->lastSeenId]);
         }
-
-        $this->badge = $this->hitungMenunggu();
     }
 
     private function hitungMenunggu(): int
     {
-        return Pesanan::where('status', 'menunggu')->count();
+        return Pesanan::query()
+            ->where('status', Pesanan::STATUS_MENUNGGU)
+            ->count();
     }
 
     public function render()
