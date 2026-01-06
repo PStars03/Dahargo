@@ -79,21 +79,14 @@
     </main>
 
     {{-- Drawer Keranjang (Global) --}}
-    <div
-        x-show="bukaKeranjang"
-        x-transition.opacity
-        class="fixed inset-0 z-40 bg-black/60"
-        x-on:click="bukaKeranjang=false"
-        style="display:none;"
-    ></div>
-
-    <div
-        x-show="bukaKeranjang"
-        x-transition
-        class="fixed right-0 top-0 z-50 h-full w-[min(92vw,420px)] border-l border-white/10 bg-slate-950/90 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur"
-        x-on:keydown.escape.window="bukaKeranjang=false"
-        style="display:none;"
-    >
+   <div
+    x-show="bukaKeranjang"
+    x-transition
+    class="fixed right-0 top-0 z-50 h-full w-[min(92vw,420px)] border-l border-white/10 bg-slate-950/90 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur"
+    x-on:keydown.escape.window="bukaKeranjang=false"
+    style="display:none;"
+>
+    <div class="flex h-full flex-col">
         <div class="flex items-center justify-between border-b border-white/10 p-4">
             <p class="text-base font-bold text-white">Keranjang</p>
             <button
@@ -104,11 +97,11 @@
                 Tutup
             </button>
         </div>
-
-        <div class="p-4">
+        <div class="flex-1 min-h-0 overflow-y-auto p-4 overscroll-contain">
             <livewire:pelanggan.keranjang-mini />
         </div>
     </div>
+</div>
 
     @livewireScripts
 

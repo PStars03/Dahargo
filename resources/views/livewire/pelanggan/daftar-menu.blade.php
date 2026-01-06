@@ -131,35 +131,4 @@
         {{ $menu->links() }}
     </div>
 
-    {{-- Drawer Keranjang --}}
-    <div
-        x-show="bukaKeranjang"
-        x-cloak
-        x-transition.opacity
-        class="fixed inset-0 z-40 bg-black/60"
-        x-on:click="bukaKeranjang=false"
-    ></div>
-
-    <div
-        x-show="bukaKeranjang"
-        x-cloak
-        x-transition
-        class="fixed right-0 top-0 z-50 h-full w-[min(92vw,420px)] bg-slate-950 text-slate-100 shadow-[0_30px_120px_rgba(0,0,0,0.6)] ring-1 ring-white/10"
-        x-on:keydown.escape.window="bukaKeranjang=false"
-    >
-        <div class="flex items-center justify-between border-b border-white/10 p-4">
-            <p class="text-base font-semibold">Keranjang</p>
-            <button
-                type="button"
-                x-on:click="bukaKeranjang=false"
-                class="rounded-xl bg-white/5 px-3 py-1.5 text-sm ring-1 ring-white/10 hover:bg-white/10"
-            >
-                Tutup
-            </button>
-        </div>
-
-        <div class="p-4">
-            <livewire:pelanggan.keranjang-mini />
-        </div>
-    </div>
 </div>
