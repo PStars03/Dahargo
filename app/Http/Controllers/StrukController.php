@@ -9,6 +9,7 @@ class StrukController extends Controller
     public function show(string $kode)
     {
         $tokenTamu = request()->cookie('token_tamu');
+        abort_if(!$tokenTamu, 403);
 
         $pesanan = Pesanan::query()
             ->with(['meja', 'item', 'pembayaran'])

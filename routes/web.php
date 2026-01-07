@@ -32,10 +32,11 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::get('/m/{token}',MasukMejaController::class)
+    ->middleware(['throttle:120,1'])
     ->name('masuk.meja');
 
 Route::view('/scan','pelanggan.scan')->name('pelanggan.scan');
-Route::middleware([PastikanMejaTerpilih::class])->group(function () {
+Route::middleware(['throttle:60,1', PastikanMejaTerpilih::class])->group(function () {
     Route::get('/menu', DaftarMenu::class)->name('pelanggan.menu');
     Route::get('/checkout', Checkout::class)->name('pelanggan.checkout');
     Route::get('/pesanan/{kode}', StatusPesanan::class)->name('pelanggan.pesanan.status');

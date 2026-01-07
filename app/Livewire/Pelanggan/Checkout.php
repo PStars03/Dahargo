@@ -32,6 +32,25 @@ class Checkout extends Component
         if (empty($this->keranjang)) {
             redirect()->route('pelanggan.menu')->send();
         }
+        $tokenTamu = request()->cookie('token_tamu') ?? session('token_tamu');
+
+        if (!$tokenTamu) {
+            $tokenTamu = (string) Str::uuid();
+        }
+
+        session(['token_tamu' => $tokenTamu]);
+
+        cookie()->queue(cookie(
+            name: 'token_tamu',
+            value: $tokenTamu,
+            minutes: 60 * 24 * 30, // 30 hari
+            path: '/',
+            domain: null,
+            secure: request()->isSecure(),
+            httpOnly: true,
+            raw: false,
+            sameSite: 'Lax'
+        ));
     }
 
     public function aturanValidasi(): array
